@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>6 Search box Designs In HTML and CSS</title>
+	<link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
+	<script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
+</head>
+<body>
+
+	<div class="wrapper">
+		<div class="header">
+			<p>Friend's rental database web app</p>
+		</div>
+
+		<div class="container">
+
+			<div class="search_wrap search_wrap_6">
+				<div class="search_box">
+					<form action="/" method="post" id="main_query_form">
+						<input type="text" class="input" name="query_text" placeholder="write your query here...">
+						<div id="main_query_submit_btn" class="btn">
+							<p>Query</p>
+						</div>
+					</form>
+				</div>
+			</div>
+
+		</div>
+
+		{% if db_response is defined %}
+			<table class="styled-table center">
+				<thead>
+
+					<tr>
+						{% for _ in range(1, db_response[0]|length + 1) %}
+							<th>Column {{_}}</th>
+						{% endfor %}
+					</tr>
+				</thead>
+				<tbody>
+
+					{% for row in range(db_response|length) %}
+						<tr>
+							{% for row_entry in range(db_response[0]|length) %}
+								<th>{{db_response[row][row_entry]}}</th>
+							{% endfor %}
+						</tr>
+					{% endfor %}
+
+				</tbody>
+			</table>
+		{% endif %}
+	</div>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
