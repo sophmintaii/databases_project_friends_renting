@@ -1,6 +1,6 @@
 import psycopg2
 
-DB_NAME = "dvdrental"
+DB_NAME = "friends_rent"
 DB_USER = "postgres"
 DB_PASS = "postgres"
 DB_HOST = "localhost"
@@ -31,6 +31,12 @@ def db_perform_query(query):
     except psycopg2.DatabaseError:
 
         print("Error triggered on query")
+
+
+def parse_custom_select_form(form_post_data):
+
+    if 'customselect1' in form_post_data:
+        print("received:", form_post_data)
 
 
 # qr = input("query -> ")
