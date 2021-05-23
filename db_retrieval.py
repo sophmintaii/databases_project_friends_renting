@@ -34,6 +34,19 @@ def db_perform_query(query):
         print("Error triggered on query")
 
 
+def parse_user_select_form(form_post_data):
+
+
+    cols_to_be_selected = form_post_data.getlist("column_name")
+    from_table = form_post_data["table_name"]
+
+    query = "select " + ",".join([col for col in cols_to_be_selected]) + " from " + from_table
+    print(query)
+    response, cols = db_perform_query(query)
+    return response, cols
+
+
+
 def parse_custom_select_form(form_post_data):
 
     #form_post_data = {'client_id' : '6', 'N' : '2', 'start_date': '2021-04-28', 'end_date' : '2020-09-02', 'customselect1' : ''}

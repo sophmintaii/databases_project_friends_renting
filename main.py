@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from db_retrieval import db_perform_query, parse_custom_select_form
+from db_retrieval import db_perform_query, parse_custom_select_form, parse_user_select_form
 app = Flask(__name__)
 
 
@@ -28,7 +28,6 @@ def custom_views():
     if request.method == "GET":
         client_data, cols = db_perform_query("select id, name, surname from user_")
         friend_data, cols = db_perform_query("select id, name, surname from friend")
-        #print(client_data)
         return render_template("custom_views.html", client_data=client_data, friend_data=friend_data)
 
 
@@ -44,9 +43,18 @@ def custom_query():
 
     if request.method == "POST":
 
-        # print(request.form)
         custom_select_output, cols = parse_custom_select_form(request.form)
         return render_template("result.html", db_response=custom_select_output, db_response_cols=cols)
+
+
+@app.route("/user_query_result", methods=["GET", "POST"])
+def user_query():
+
+    if request.method == "POST":
+
+        user_select_output, cols = parse_user_select_form(request.form)
+        return render_template("result.html", db_response=user_select_output, db_response_cols=cols)
+
 
 
 if __name__ == "__main__":
