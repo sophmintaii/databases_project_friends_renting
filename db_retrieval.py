@@ -34,6 +34,17 @@ def db_perform_query(query):
         print("Error triggered on query")
 
 
+def perform_db_action(form_post_data):
+
+    if 'add_client' in form_post_data:
+
+        query = f"""
+                INSERT INTO user_ (id, phone_number, name, surname) VALUES (11, '{form_post_data["phone"]}', '{form_post_data["name"]}', '{form_post_data["surname"]}');
+                """
+        cur.execute(query)
+
+
+
 def parse_user_select_form(form_post_data):
 
 
@@ -141,12 +152,10 @@ def parse_custom_select_form(form_post_data):
 
     elif 'customselect12' in form_post_data:
         query = f"""
-                
+     
                 """
     else:
         query = ""
-
-    # print(query)
 
     if not query:
         return []
@@ -157,6 +166,8 @@ def parse_custom_select_form(form_post_data):
         return response, cols
     except psycopg2.DatabaseError:
         return []
+
+
 
 # print(db_perform_query("select id, name, surname from user_"))
 # qr = input("query -> ")

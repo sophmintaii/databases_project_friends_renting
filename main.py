@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from db_retrieval import db_perform_query, parse_custom_select_form, parse_user_select_form
+from db_retrieval import db_perform_query, parse_custom_select_form, parse_user_select_form, perform_db_action
 app = Flask(__name__)
 
 
@@ -11,7 +11,6 @@ def hello():
     elif request.method == "POST":
         query_text = request.form["query_text"]
         db_response_data = db_perform_query(query_text)
-        #print(db_response_data)
         return render_template("index.html", db_response=db_response_data)
 
 
@@ -54,6 +53,16 @@ def user_query():
 
         user_select_output, cols = parse_user_select_form(request.form)
         return render_template("result.html", db_response=user_select_output, db_response_cols=cols)
+
+
+@app.route("/handle_action", methods=["GET", "POST"])
+def handle_action():
+
+    if request.method == "POST":
+
+        perform_db_action(request.form)
+        return render_template("result.html")
+
 
 
 
