@@ -25,6 +25,7 @@ except psycopg2.DatabaseError:
 def db_perform_query(query):
 
     try:
+        print("Performing: ", query)
         cur.execute(query)
         db_response = cur.fetchall()
         colnames = [desc[0] for desc in cur.description]
@@ -54,8 +55,37 @@ def get_unreturned_gifts():
     return response
 
 def perform_db_action(form_post_data):
+    cur_date = datetime.today().strftime('%Y-%m-%d')
 
-    if 'add_client' in form_post_data:
+    if 'rent_friend' in form_post_data:
+
+        rented_friends = form_post_data.getlist("rented_friend")
+        #
+
+        cur_max_id, _ = db_perform_query("""
+                                    SELECT * 
+                            FROM rent 
+                            WHERE rent_id = (SELECT MAX(rent_id) FROM rent)""")
+        max_id = cur_max_id[0][0] + 1
+
+        # Modify rent table
+        query = f"""INSERT INTO rent(rent_id, user_id, date, party_id) VALUES
+                            ({max_id}, {form_post_data["client_id"]}, '{cur_date}', {form_post_data["celebration_id"]})
+                            """
+
+        cur.execute(query)
+
+        # Modify rent table
+        query = "INSERT INTO rent_friends(rent_id, friend_id) VALUES "
+        rented_friends_ids = []
+        for rented_friend_id in rented_friends :
+            rented_friends_ids.append(f"({max_id}, {rented_friend_id})\n")
+        query = query + ", ".join(rented_friends_ids) + ";"
+        print(query)
+        cur.execute(query)
+
+
+    elif 'add_client' in form_post_data:
 
         query = f"""
                 INSERT INTO user_ (id, phone_number, name, surname) VALUES (11, '{form_post_data["phone"]}', '{form_post_data["name"]}', '{form_post_data["surname"]}');
@@ -73,7 +103,7 @@ def perform_db_action(form_post_data):
 
     elif 'gift_something' in form_post_data:
 
-        cur_date = datetime.today().strftime('%Y-%m-%d')
+
 
         given_present_query = f"""
                                 INSERT INTO present_given(present_id, user_id, friend_id, date, is_returned) VALUES
@@ -87,10 +117,45 @@ def perform_db_action(form_post_data):
 
         print("from return gift", form_post_data)
 
+
         query = f"""
                 UPDATE present_given
                 SET is_returned = true WHERE given_id = {form_post_data["given_id"]};
                 """
+
+        cur.execute(query)
+
+    elif 'file_complaint' in form_post_data:
+
+
+        cur_max_id, _ = db_perform_query("""
+                            SELECT * 
+                    FROM complaint 
+                    WHERE complaint_id = (SELECT MAX(complaint_id) FROM complaint)""")
+        max_id = cur_max_id[0][0] + 1
+        complaining_clients_ids = form_post_data.getlist("complaining_client")
+
+        # Modify complaint table
+        query = f"""INSERT INTO complaint(complaint_id, text, friend_id, date) VALUES
+                    ({max_id}, {form_post_data["complaint_descr"]}, {form_post_data["friend_id"]}, '{cur_date}')
+                    """
+
+        cur.execute(query)
+
+        # Modify user_complaint table
+        query = "INSERT INTO user_complaint(user_id, complaint_id) VALUES "
+        complaint_list = []
+        for complaining_client_id in complaining_clients_ids:
+            complaint_list.append(f"({complaining_client_id}, {max_id})\n")
+        query = query + ", ".join(complaint_list) + ";"
+        print(query)
+        cur.execute(query)
+
+    elif 'take_holiday' in form_post_data:
+
+        query = f"""INSERT INTO dayoffs(friend_id, date) VALUES
+                            ({form_post_data["friend_id"]}, '{cur_date}')
+                            """
 
         cur.execute(query)
 
@@ -103,10 +168,9 @@ def parse_user_select_form(form_post_data):
     from_table = form_post_data["table_name"]
 
     query = "select " + ",".join([col for col in cols_to_be_selected]) + " from " + from_table
-    print(query)
+    #print(query)
     response, cols = db_perform_query(query)
     return response, cols
-
 
 
 def parse_custom_select_form(form_post_data):

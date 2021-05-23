@@ -8,6 +8,9 @@
 </head>
 <body>
         <div class="wrapper">
+            {% if msg is defined %}
+                <h1>{{ msg }}</h1>
+            {% endif %}
     		{% if db_response is defined and db_response is not none %}
 			<table class="styled-table center">
 				<thead>

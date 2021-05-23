@@ -38,6 +38,37 @@
     <label><input type="radio" name="colorRadio" value="take_holiday"> Take holiday</label>
 
 
+    <form class="rent_friend red box" action="/handle_action" method="POST">
+        <h3 class="custom_query_desc">
+            Enter friend rent details
+        </h3>
+        <div class="form-group">
+            <label>Who is renting?</label>
+            <select class="form-control" name="client_id">
+                {% for client_id, name, surname in client_data %}
+                    <option value="{{ client_id }}">{{ name + " " + surname }}</option>
+                {% endfor %}
+            </select>
+            <label>Choose friends you want to rent:</label>
+            <ul>
+            {% for friend_id, desc, name, surname in rent_friends_data %}
+                <li><label><input type="checkbox" name="rented_friend" value="{{ friend_id }}">{{ name + " " + surname }}  |  {{ desc }}</label></li>
+            {% endfor %}
+            </ul>
+
+            <label>Choose party:</label>
+            <select class="form-control" name="celebration_id">
+                {% for party_id, part_name in celebrations_data %}
+                    <option value="{{ party_id }}">{{ part_name }}</option>
+                {% endfor %}
+            </select>
+
+        </div>
+        <button name="rent_friend" type="submit" class="btn btn-primary">Send data</button>
+    </form>
+
+
+
     <form class="add_client red box" action="/handle_action" method="POST">
         <h3 class="custom_query_desc">
             Enter new client info
@@ -123,11 +154,10 @@
         </h3>
         <div class="form-group">
             <label>Who is complaining?</label>
-            <select class="form-control" name="client_id">
-                {% for client_id, name, surname in client_data %}
-                    <option value="{{ client_id }}">{{ name + " " + surname }}</option>
-                {% endfor %}
-            </select>
+            {% for client_id, name, surname in client_data %}
+                <label><input type="checkbox" name="complaining_client" value="{{ client_id }}">{{ name + " " + surname }}</label>
+            {% endfor %}
+
             <label>Adressant</label>
             <select class="form-control" name="friend_id">
                 {% for friend_id, name, surname in friend_data %}
@@ -139,6 +169,22 @@
             <input type="text" class="form-control" name="complaint_descr">
         </div>
         <button name="file_complaint" type="submit" class="btn btn-primary">Send data</button>
+    </form>
+
+
+    <form class="take_holiday red box" action="/handle_action" method="POST">
+        <h3 class="custom_query_desc">
+            Enter holiday info
+        </h3>
+        <div class="form-group">
+            <label>Who is going on vacation</label>
+            <select class="form-control" name="friend_id">
+                {% for friend_id, name, surname in friend_data %}
+                    <option value="{{ friend_id }}">{{ name + " " + surname }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button name="take_holiday" type="submit" class="btn btn-primary">Send data</button>
     </form>
 </body>
 </html>
