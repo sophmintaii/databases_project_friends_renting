@@ -20,7 +20,8 @@
 
 		<div class="container">
             <button type="button" class="btn btn-primary" onClick="window.location.href='/actions'">Perform Action</button>
-            <button type="button" class="btn btn-primary" onClick="window.location.href='/views'">View Database</button>
+            <button type="button" class="btn btn-primary" onClick="window.location.href='/db_custom_views'">View Database (Custom)</button>
+            <button type="button" class="btn btn-primary" onClick="window.location.href='/db_user_views'">View Database (User)</button>
 {#			<div class="search_wrap search_wrap_6">#}
 {#				<div class="search_box">#}
 {#					<form action="/" method="post" id="main_query_form">#}
@@ -46,13 +47,13 @@
 {#				</thead>#}
 {#				<tbody>#}
 {##}
-					{% for row in range(db_response|length) %}
-						<tr>
-							{% for row_entry in range(db_response[0]|length) %}
-								<th>{{db_response[row][row_entry]}}</th>
-							{% endfor %}
-						</tr>
-					{% endfor %}
+{#					{% for row in range(db_response|length) %}#}
+{#						<tr>#}
+{#							{% for row_entry in range(db_response[0]|length) %}#}
+{#								<th>{{db_response[row][row_entry]}}</th>#}
+{#							{% endfor %}#}
+{#						</tr>#}
+{#					{% endfor %}#}
 {##}
 {#				</tbody>#}
 {#			</table>#}

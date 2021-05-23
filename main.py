@@ -22,13 +22,21 @@ def actions():
         return render_template("actions.html")
 
 
-@app.route("/views", methods=["GET", "POST"])
-def views():
+@app.route("/db_custom_views", methods=["GET", "POST"])
+def custom_views():
 
     if request.method == "GET":
-        client_data = db_perform_query("select id, name, surname from user_")
-        print(client_data)
-        return render_template("custom_selects.html", client_data=client_data)
+        client_data, cols = db_perform_query("select id, name, surname from user_")
+        friend_data, cols = db_perform_query("select id, name, surname from friend")
+        #print(client_data)
+        return render_template("custom_views.html", client_data=client_data, friend_data=friend_data)
+
+
+@app.route("/db_user_views", methods=["GET", "POST"])
+def user_views():
+
+    if request.method == "GET":
+        return render_template("user_views.html")
 
 
 @app.route("/custom_query_result", methods=["GET", "POST"])
@@ -36,15 +44,9 @@ def custom_query():
 
     if request.method == "POST":
 
-        print(request.form)
-        custom_select_output = parse_custom_select_form(request.form)
-        if 'customselect1' in request.form:
-            data = "Form 1 was selected"
-        if 'customselect2' in request.form:
-            data = "Form 2 was selected"
-        if 'customselect3' in request.form:
-            data = "Form 3 was selected"
-        return render_template("resut.html", data=data)
+        # print(request.form)
+        custom_select_output, cols = parse_custom_select_form(request.form)
+        return render_template("result.html", db_response=custom_select_output, db_response_cols=cols)
 
 
 if __name__ == "__main__":

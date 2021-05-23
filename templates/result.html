@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
+</head>
+<body>
+        <div class="wrapper">
+    		{% if db_response is defined and db_response is not none %}
+			<table class="styled-table center">
+				<thead>
+					<tr>
+                        {% if db_response_cols is defined %}
+                            {% for c in db_response_cols %}
+                                <th>{{ c }}</th>
+                            {% endfor %}
+                        {% else %}
+                            {% for _ in range(1, db_response[0]|length + 1) %}
+							    <th>Column {{_}}</th>
+						    {% endfor %}
+                        {% endif %}
+{#						{% for _ in range(1, db_response[0]|length + 1) %}#}
+{#							<th>Column {{_}}</th>#}
+{#						{% endfor %}#}
+					</tr>
+				</thead>
+				<tbody>
+
+					{% for row in range(db_response|length) %}
+						<tr>
+							{% for row_entry in range(db_response[0]|length) %}
+								<th>{{db_response[row][row_entry]}}</th>
+							{% endfor %}
+						</tr>
+					{% endfor %}
+
+				</tbody>
+			</table>
+		    {% endif %}
+        </div>
+</body>
+</html>
