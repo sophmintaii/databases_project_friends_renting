@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
-from db_retrieval import db_perform_query, parse_custom_select_form, parse_user_select_form, perform_db_action
+from db_retrieval import db_perform_query, parse_custom_select_form, parse_user_select_form, perform_db_action, get_unreturned_gifts
+
 app = Flask(__name__)
 
 
@@ -17,8 +18,14 @@ def hello():
 @app.route("/actions", methods=["GET", "POST"])
 def actions():
 
+    unreturned_gifts_data = get_unreturned_gifts()
+    client_data, cols = db_perform_query("select id, name, surname from user_")
+    friend_data, cols = db_perform_query("select id, name, surname from friend")
+    print(unreturned_gifts_data)
     if request.method == "GET":
-        return render_template("actions.html")
+        return render_template("actions.html", client_data=client_data,
+                               friend_data=friend_data,
+                               unreturned_gifts_data=unreturned_gifts_data)
 
 
 @app.route("/db_custom_views", methods=["GET", "POST"])

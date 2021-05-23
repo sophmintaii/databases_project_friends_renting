@@ -1,4 +1,5 @@
 import psycopg2
+from datetime import datetime
 
 DB_NAME = "friends_rent"
 DB_USER = "postgres"
@@ -34,6 +35,24 @@ def db_perform_query(query):
         print("Error triggered on query")
 
 
+def get_unreturned_gifts():
+
+    query = """
+    select given_id, t2.name, 
+    t.name as from_name, 
+    t.surname as from_surname, 
+    t1.name as to_name, 
+    t1.surname as to_surname
+    from present_given as s
+    JOIN user_ t on t.id = s.user_id
+    JOIN friend t1 on t1.id = s.friend_id
+    JOIN present t2 on t2.present_id = s.present_id
+    where is_returned = false;
+    """
+
+    response, cols = db_perform_query(query)
+    return response
+
 def perform_db_action(form_post_data):
 
     if 'add_client' in form_post_data:
@@ -43,10 +62,42 @@ def perform_db_action(form_post_data):
                 """
         cur.execute(query)
 
+    elif 'add_friend' in form_post_data:
+
+        gender = '0' if form_post_data["gender"] == "male" else "1"
+        query = f"""
+                INSERT INTO friend (phone_number, name, surname, description, age, gender) 
+                VALUES ('{form_post_data["phone"]}', '{form_post_data["name"]}', '{form_post_data["surname"]}', '{form_post_data["description"]}', {form_post_data["age"]}, '{gender}');
+                """
+        cur.execute(query)
+
+    elif 'gift_something' in form_post_data:
+
+        cur_date = datetime.today().strftime('%Y-%m-%d')
+
+        given_present_query = f"""
+                                INSERT INTO present_given(present_id, user_id, friend_id, date, is_returned) VALUES
+                                ({form_post_data["gift_id"]}, {form_post_data["client_id"]}, {form_post_data["friend_id"]}, '{cur_date}', false)
+                                """
+
+        cur.execute(given_present_query)
+
+
+    elif 'return_gift' in form_post_data:
+
+        print("from return gift", form_post_data)
+
+        query = f"""
+                UPDATE present_given
+                SET is_returned = true WHERE given_id = {form_post_data["given_id"]};
+                """
+
+        cur.execute(query)
+
+    conn.commit()
 
 
 def parse_user_select_form(form_post_data):
-
 
     cols_to_be_selected = form_post_data.getlist("column_name")
     from_table = form_post_data["table_name"]
