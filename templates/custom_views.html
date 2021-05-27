@@ -238,9 +238,16 @@
                 <p class="tooltips">Step 2: Enter details</p>
             </div>
             <h3 class="custom_query_desc">
-                ?
+                Вивести найманих друзiв у порядку спадання кiлькость скарг вiд груп 
+                -- з принаймнi N клiєнтiв за вказаний перiод (з дати F по дату T);
             </h3>
-            <button name="customselect9" type="submit" class="btn btn-primary">Send data</button>
+            <div class="form-group">
+                <label>Start date</label>
+                <input type="text" class="form-control" name="start_date">
+                <label>End date</label>
+                <input type="text" class="form-control" name="end_date">
+                <button name="customselect9" type="submit" class="btn btn-primary">Send data</button>
+            </div>
         </div>
     </form>
 
@@ -301,6 +308,14 @@
             <h3 class="custom_query_desc">
                 По мiсяцях знайти середню кiлькiсть клiєнтiв у групi, що реєстрували скаргу на найманого друга Х
             </h3>
+            <div class="form-group">
+                <label>Friend</label>
+                <select class="form-control" name="friend_id">
+                    {% for friend_id, name, surname in friend_data %}
+                        <option value="{{ friend_id }}">{{ name + " " + surname }}</option>
+                    {% endfor %}
+                </select>
+            </div>
             <button name="customselect12" type="submit" class="btn btn-primary">Send data</button>
         </div>
     </form>
