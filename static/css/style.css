@@ -209,3 +209,8 @@ body{
 .btn-primary {
 	margin-top: 10px;
 }
+
+.custom_query_desc {
+	margin-left: 10%;
+	margin-right: 10%;
+}
