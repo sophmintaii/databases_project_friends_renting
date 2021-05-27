@@ -9,7 +9,9 @@
 <body>
         <div class="wrapper">
             {% if msg is defined %}
-                <h1>{{ msg }}</h1>
+				<div class="header">
+                	<p class="tooltips">{{ msg }}</p>
+				</div>
             {% endif %}
     		{% if db_response is defined and db_response is not none %}
 			<table class="styled-table center">
@@ -39,6 +41,12 @@
 				</tbody>
 			</table>
 		    {% endif %}
-        </div>
+		<div class="container" style="display: flex; justify-content: center;">
+			<button type="button" class="btn btn-primary" onClick="window.location.href='/actions'" style="margin-right: 15px;">Make another action</button>
+			<button type="button" class="btn btn-primary" onClick="window.location.href='/db_custom_views'" style="margin-right: 15px;">View Database (Custom)</button>
+			<button type="button" class="btn btn-primary" onClick="window.location.href='/db_user_views'" style="margin-right: 15px;">View Database (User)</button>
+			<button type="button" class="btn btn-primary" onClick="window.location.href='/'">Return to main menu</button>
+		</div>
+	</div>
 </body>
 </html>

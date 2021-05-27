@@ -19,6 +19,28 @@
 
         $( document ).ready(function() {
             table_select_btn = document.getElementById("table_select_btn");
+            $('option[class="select-option"]').click(function() {
+            var inputValue = $(this).attr("value");
+            document.getElementById("options").style="display: block"
+            if (inputValue.length == 0) {
+                document.getElementById("col_category").innerHTML = "<option></option>";
+            }
+
+            else {
+                var colOptions = "<div class=\"form-group\">";
+                for (column in tablesBycolumns[inputValue]) {
+                    colOptions += "<label style=\"margin-right: 10px;\">" + `<input type='checkbox' name='column_name' value='${tablesBycolumns[inputValue][column]}'>` + tablesBycolumns[inputValue][column] + "</label>";
+                }
+                colOptions += "</div>"
+                document.getElementById("col_category").innerHTML =  colOptions + "<div class=\"container\" style=\"display: flex; justify-content: center;\"><button id=\"table_select_btn\" name=\"userselect\" type=\"submit\" class=\"btn btn-primary\" style=\"margin-top: 0px;\">Show data</button></div>";
+            }
+
+            $("<input />").attr("type", "hidden")
+              .attr("name", "table_name")
+              .attr("value", inputValue)
+              .appendTo("#col_category");
+
+        });
         });
 
         var tablesBycolumns = {
@@ -36,49 +58,41 @@
             user_complaint: ["user_id", "complaint_id"]
         }
 
-        function changecat(value) {
-            if (value.length == 0) {
-                document.getElementById("col_category").innerHTML = "<option></option>";
-            }
-
-            else {
-                var colOptions = "";
-                for (column in tablesBycolumns[value]) {
-                    colOptions += "<label>" + `<input type='checkbox' name='column_name' value='${tablesBycolumns[value][column]}'>` + tablesBycolumns[value][column] + "</label>";
-                }
-                document.getElementById("col_category").innerHTML = colOptions;
-            }
-            table_select_btn.style.display = "inline-block";
-            document.getElementById("col_category").appendChild(table_select_btn)
-
-            $("<input />").attr("type", "hidden")
-              .attr("name", "table_name")
-              .attr("value", value)
-              .appendTo("#col_category");
-
-        }
+        
     </script>
 </head>
 <body>
-    <select name="meal" id="meal" onChange="changecat(this.value);">
-        <option value="" disabled selected>Select</option>
-        <option value="user_">user</option>
-        <option value="friend">friend</option>
-        <option value="party">party</option>
-        <option value="rent_friends">rent_friends</option>
-        <option value="rent">rent</option>
-        <option value="friend_hobby">friend_hobby</option>
-        <option value="hobby">hobby</option>
-        <option value="day_offs">day_offs</option>
-        <option value="present">present</option>
-        <option value="present_given">present_given</option>
-        <option value="complaint">complaint</option>
-        <option value="user_complaint">user_complaint</option>
+    <div class="header">
+        <p class="tooltips">Step 1: Select option</p>
+    </div>
+    <select name="meal" class="form-select select-action" id="meal" aria-label="Default select example" style="margin-left: 25%; margin-right: 10%; width: 50%; margin-top: 15px;">
+        <option class="select-option" disabled="" selected=""> -- select an option -- </option>
+        <option class="select-option" value="user_">user</option>
+        <option class="select-option" value="friend">friend</option>
+        <option class="select-option" value="party">party</option>
+        <option class="select-option" value="rent_friends">rent_friends</option>
+        <option class="select-option" value="rent">rent</option>
+        <option class="select-option" value="friend_hobby">friend_hobby</option>
+        <option class="select-option" value="hobby">hobby</option>
+        <option class="select-option" value="day_offs">day_offs</option>
+        <option class="select-option" value="present">present</option>
+        <option class="select-option" value="present_given">present_given</option>
+        <option class="select-option" value="complaint">complaint</option>
+        <option class="select-option" value="user_complaint">user_complaint</option>
 
     </select>
-    <form id="col_category" action="/user_query_result" method="POST">
-        <option value="" disabled selected>Select</option>
-        <button id="table_select_btn" name="userselect" type="submit" class="btn btn-primary category_select_btn">Send data</button>
-    </form>
+    <div class="container" style="display: flex; justify-content: center; margin-top: 20px; color: #fff;">
+        <div id="options" class="options" style="display: none;">
+            <div class="header">
+                <p class="tooltips">Step 2: Select columns</p>
+            </div>
+            <form id="col_category" action="/user_query_result" method="POST">
+                <div class="container" style="display: flex; justify-content: center; display: none;">
+                    <button id="table_select_btn" name="userselect" type="submit" class="btn btn-primary">Show data</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
 </body>
 </html>
