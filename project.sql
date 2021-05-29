@@ -6,6 +6,9 @@ CREATE TABLE IF NOT EXISTS "user_" (
 	PRIMARY KEY ("id")
 );
 
+CREATE INDEX IF NOT EXISTS idx_user
+ON user_(id);
+
 CREATE TABLE IF NOT EXISTS "friend" (
 	"id" serial,
 	"phone_number" varchar(12) unique,
@@ -18,11 +21,20 @@ CREATE TABLE IF NOT EXISTS "friend" (
 );
 
 
+CREATE INDEX IF NOT EXISTS idx_friend
+ON friend(id);
+
+
 CREATE TABLE IF NOT EXISTS "party" (
 	"party_id" serial,
 	"name" varchar not null,
 	PRIMARY KEY ("party_id")
 );
+
+
+CREATE INDEX IF NOT EXISTS idx_party
+ON party(party_id);
+
 
 CREATE TABLE IF NOT EXISTS "rent" (
 	"rent_id" serial,
@@ -36,6 +48,10 @@ CREATE TABLE IF NOT EXISTS "rent" (
 
 );
 
+
+CREATE INDEX IF NOT EXISTS idx_rent
+ON rent(rent_id);
+
 CREATE TABLE IF NOT EXISTS "rent_friends" (
 	"rent_id" int not null,
 	"friend_id" int not null,
@@ -48,6 +64,9 @@ CREATE TABLE IF NOT EXISTS "rent_friends" (
 );
 
 
+CREATE INDEX IF NOT EXISTS idx_rent_friends
+ON rent_friends USING hash (rent_id);
+
 CREATE TABLE IF NOT EXISTS "dayoffs" (
 	"friend_id" int not null,
 	"date" date not null,
@@ -55,6 +74,10 @@ CREATE TABLE IF NOT EXISTS "dayoffs" (
       FOREIGN KEY(friend_id) 
 	  REFERENCES friend(id)
 );
+
+
+CREATE INDEX IF NOT EXISTS idx_dayoffs
+ON dayoffs USING hash (friend_id);
 
 
 CREATE TABLE IF NOT EXISTS "complaint" (
@@ -69,6 +92,10 @@ CREATE TABLE IF NOT EXISTS "complaint" (
 );
 
 
+CREATE INDEX IF NOT EXISTS idx_complaint
+ON complaint(complaint_id);
+
+
 CREATE TABLE IF NOT EXISTS "user_complaint" (
 	"user_id" int not null,
 	"complaint_id" int not null,
@@ -81,12 +108,19 @@ CREATE TABLE IF NOT EXISTS "user_complaint" (
 );
 
 
+CREATE INDEX IF NOT EXISTS idx_user_complaint
+ON user_complaint USING hash (complaint_id);
+
 CREATE TABLE IF NOT EXISTS "present" (
 	"present_id" serial,
 	"name" varchar(100),
 	"price" decimal(20, 5),
 	PRIMARY KEY ("present_id")
 );
+
+
+CREATE INDEX IF NOT EXISTS idx_present
+ON present(present_id);
 
 CREATE TABLE IF NOT EXISTS "present_given" (
 	"given_id" serial,
@@ -108,12 +142,18 @@ CREATE TABLE IF NOT EXISTS "present_given" (
 );
 
 
+CREATE INDEX IF NOT EXISTS idx_present_given
+ON present_given(given_id);
+
+
 CREATE TABLE IF NOT EXISTS "hobby" (
 	"hobby_id" serial,
 	"name" varchar(30) unique,
 	PRIMARY KEY ("hobby_id")
 );
 
+CREATE INDEX IF NOT EXISTS idx_hobby
+ON hobby(hobby_id);
 
 
 CREATE TABLE IF NOT EXISTS "friend_hobby" (
@@ -126,6 +166,10 @@ CREATE TABLE IF NOT EXISTS "friend_hobby" (
       FOREIGN KEY(hobby_id) 
 	  REFERENCES hobby(hobby_id)
 );
+
+
+CREATE INDEX IF NOT EXISTS idx_friend_hobby
+ON friend_hobby USING hash (friend_id);
 
 ----------------------------------------------- З А П О В Н Е Н Н Я -------------------------------------
 
@@ -286,7 +330,10 @@ INSERT INTO complaint(complaint_id, text, friend_id, date) VALUES
 (3, 'Terrible outfit of my fake boyfriend', 10, '2021-02-15'),
 (4, 'The friend was very silent and uninteresting', 5, '2020-09-18'),
 (5, 'The friend does not respond to messages and calls for a long time' , 2, '2020-09-15'),
-(6, 'Stole my wallet', 1, '2020-10-06');
+(6, 'Stole my wallet', 1, '2020-10-06'),
+(7, 'Bad sense of humour', 10, '2020-09-19'),
+(8, 'Broke the glass', 5, '2020-11-11'),
+(9, 'Does not respond to requests', 2, '2016-03-03');
 
 --insert user complaint
 INSERT INTO user_complaint(user_id, complaint_id) VALUES
@@ -295,14 +342,18 @@ INSERT INTO user_complaint(user_id, complaint_id) VALUES
 (9, 3),
 (6, 4),
 (2, 5),
-(1, 6);
-
+(1, 6),
+(6, 7),
+(10, 8),
+(1, 9),
+(3, 9),
+(5, 9);
 
 
 ---------------------------------------------- З А П И Т И ----------------------------------------
 
 -- 1. Для клієнта С знайти усіх друзів, яких він наймав принаймні N разів за вказаний період (з дати F по дату T)
--- Нехай С = Sonny Prigmore (id = 6), N = 2, F = 2020-09-02, T = 2021-04-28
+-- Нехай С = Aida Asipenko (id = 6), N = 2, F = 2020-09-02, T = 2021-04-28
 
 SELECT friend_id, name FROM rent JOIN rent_friends AS rf ON rent.rent_id = rf.rent_id JOIN friend ON 
 rf.friend_id = friend.id
@@ -327,29 +378,32 @@ GROUP BY party.party_id, name
 HAVING COUNT(party.party_id) >= 2;
 
 -- 4. Знайти усiх клiєнтiв, якi наймали щонайменше N рiзних друзiв за вказаний перiод (з дати F по дату T);
--- Нехай N = 2, F = 2020-09-02, T = 2021-04-28
+-- Нехай N = 3, F = 2020-09-02, T = 2021-04-28
 
-SELECT * FROM rent JOIN rent_friends ON rent.rent_id = rent_friends.rent_id JOIN user_ ON rent.user_id = user_.id
+SELECT user_id, COUNT( DISTINCT friend_id) FROM rent JOIN rent_friends ON rent.rent_id = rent_friends.rent_id JOIN user_ ON rent.user_id = user_.id
 	WHERE date('2021-04-28') > date and date > date('2020-09-02')
-	GROUP BY user_id, friend_id
-	HAVING COUNT(user_id) >= 2;
-
+	GROUP BY user_id
+	HAVING COUNT( DISTINCT friend_id) >= 3;
 
 -- 5.  знайти усiх найманих друзiв, яких наймали хоча б N разiв за вказаний перiод (з дати F по
 -- дату T);
-SELECT friend_id FROM rent JOIN rent_friends on rent.rent_id = rent_friends.rent_id
-	WHERE  date('2012-01-08') > date and date > date('1999-01-08')
+-- Нехай N = 2, F = 2020-09-02, T = 2021-04-28
+
+SELECT friend_id, COUNT(rent.rent_id) FROM rent JOIN rent_friends on rent.rent_id = rent_friends.rent_id
+	WHERE date('2021-04-28') > date and date > date('2020-09-02')
 	GROUP BY friend_id
-	HAVING COUNT(friend_id) > 3;
+	HAVING COUNT(rent.rent_id) > 2;
 
 -- 6. знайти сумарну кiлькiсть побачень по мiсяцях;
-SELECT COUNT(DATE_TRUNC('month',date)) as dates_for_months
+
+SELECT EXTRACT(MONTH FROM date), COUNT(rent_id) as dates_for_months
 FROM rent
-GROUP BY DATE_TRUNC('month',date);
+GROUP BY EXTRACT(MONTH FROM date);
 
 -- 7. для найманого друга Х та кожного свята, на якому вiн побував,
 -- знайти скiльки разiв за вказаний перiод (з дати F по дату T) вiн був найнятий
 -- на свято у групi з принаймнi N друзiв;
+
 SELECT COUNT(*) FROM (
 	SELECT DISTINCT rent_id FROM (
 		SELECT rent_id, friend_id AS x_id FROM friend 
@@ -372,20 +426,45 @@ WHERE user_id = 6 AND present_given.date BETWEEN date('2001-09-02') AND date('20
 GROUP BY present_id
 ORDER BY COUNT(DISTINCT dayoffs.date) DESC;
 
+-- 9. вивести найманих друзiв у порядку спадання кiлькость скарг вiд груп 
+-- з принаймнi N клiєнтiв за вказаний перiод (з дати F по дату T);
+
+SELECT friend_id FROM complaint 
+JOIN (
+	SELECT complaint_id FROM user_complaint
+	GROUP BY complaint_id
+	HAVING COUNT(complaint_id) > 0
+) AS special_complaints
+USING (complaint_id)
+WHERE complaint.date BETWEEN date('2010-01-02') AND date('2030-01-02')
+GROUP BY friend_id
+ORDER BY COUNT(complaint_id) DESC;
+
 -- 10. знайти усi спiльнi подiї для клiєнта С та найманого
 -- друга Х за вказаний перiод (з дати F по дату T);
+
 SELECT rent_id FROM rent 
 JOIN rent_friends USING (rent_id)
 WHERE user_id = 6 AND friend_id = 5 AND date BETWEEN date('2001-09-02') AND date('2030-04-28');
 
 
 -- 11. знайти усi днi коли вихiдними були вiд А до В найманих друзiв, включно;
+
 SELECT date FROM dayoffs
 GROUP BY date
 HAVING COUNT(date) BETWEEN 2 AND 3;
 
 -- 12. по мiсяцях знайти середню кiлькiсть клiєнтiв у групi,
 -- що реєстрували скаргу на найманого друга Х;
+
+SELECT EXTRACT(MONTH FROM date) AS month, AVG(group_size) AS average FROM complaint 
+JOIN (
+	SELECT complaint_id, COUNT(complaint_id) AS group_size FROM user_complaint
+	GROUP BY complaint_id
+) AS special_complaints
+USING (complaint_id)
+WHERE friend_id = 2
+GROUP BY EXTRACT(MONTH FROM date);
 
 
 
