@@ -45,6 +45,7 @@
         <label><input type="radio" name="colorRadio" value="query10"> red</label>
         <label><input type="radio" name="colorRadio" value="query11"> green</label>
         <label><input type="radio" name="colorRadio" value="query12"> blue</label>
+        <label><input type="radio" name="colorRadio" value="query13"> blue</label>
     </div>
     <form class="query1 red box" action="/custom_query_result" method="POST">
         <h3 class="custom_query_desc">
@@ -233,6 +234,20 @@
             По мiсяцях знайти середню кiлькiсть клiєнтiв у групi, що реєстрували скаргу на найманого друга Х
         </h3>
         <button name="customselect12" type="submit" class="btn btn-primary">Send data</button>
+    </form>
+
+
+    <form class="query13 red box" action="/custom_query_result" method="POST">
+        <h3 class="custom_query_desc">
+            додатковий функціонал: вивести усіх друзів, для яких хобі це X
+        </h3>
+        <label>Enter hobby:</label>
+        <select class="form-control" name="hobby_name">
+                {% for hobby_id, hobby_name in hobby_data %}
+                    <option value="{{ hobby_name }}">{{ hobby_name }}</option>
+                {% endfor %}
+        </select>
+        <button name="customselect13" type="submit" class="btn btn-primary">Send data</button>
     </form>
 
 {#    <div class="red box">You have selected <strong>red radio button</strong> so i am here</div>#}

@@ -16,6 +16,7 @@ try:
                             port=DB_PORT)
     print("Connected")
     cur = conn.cursor()
+    conn.autocommit = True
 
 except psycopg2.DatabaseError:
 
@@ -87,27 +88,45 @@ def perform_db_action(form_post_data):
 
     elif 'add_client' in form_post_data:
 
+        cur_max_id, _ = db_perform_query("""
+                                            SELECT * 
+                                    FROM user_ 
+                                    WHERE id = (SELECT MAX(id) FROM user_)""")
+        max_id = cur_max_id[0][0] + 1
+
         query = f"""
-                INSERT INTO user_ (id, phone_number, name, surname) VALUES (11, '{form_post_data["phone"]}', '{form_post_data["name"]}', '{form_post_data["surname"]}');
+                INSERT INTO user_ (id, phone_number, name, surname) VALUES ({max_id}, '{form_post_data["phone"]}', '{form_post_data["name"]}', '{form_post_data["surname"]}');
                 """
         cur.execute(query)
 
     elif 'add_friend' in form_post_data:
 
+        cur_max_id, _ = db_perform_query("""
+                                                    SELECT * 
+                                            FROM friend 
+                                            WHERE id = (SELECT MAX(id) FROM friend)""")
+        max_id = cur_max_id[0][0] + 1
+
         gender = '0' if form_post_data["gender"] == "male" else "1"
         query = f"""
-                INSERT INTO friend (phone_number, name, surname, description, age, gender) 
-                VALUES ('{form_post_data["phone"]}', '{form_post_data["name"]}', '{form_post_data["surname"]}', '{form_post_data["description"]}', {form_post_data["age"]}, '{gender}');
+                INSERT INTO friend (id, phone_number, name, surname, description, age, gender) 
+                VALUES ({max_id}, '{form_post_data["phone"]}', '{form_post_data["name"]}', '{form_post_data["surname"]}', '{form_post_data["description"]}', {form_post_data["age"]}, '{gender}');
                 """
         cur.execute(query)
 
     elif 'gift_something' in form_post_data:
 
+        cur_max_id, _ = db_perform_query("""
+                                                            SELECT * 
+                                                    FROM present_given 
+                                                    WHERE given_id = (SELECT MAX(given_id) FROM present_given)""")
+        max_id = cur_max_id[0][0] + 1
+
 
 
         given_present_query = f"""
-                                INSERT INTO present_given(present_id, user_id, friend_id, date, is_returned) VALUES
-                                ({form_post_data["gift_id"]}, {form_post_data["client_id"]}, {form_post_data["friend_id"]}, '{cur_date}', false)
+                                INSERT INTO present_given(given_id, present_id, user_id, friend_id, date, is_returned) VALUES
+                                ({max_id},{form_post_data["gift_id"]}, {form_post_data["client_id"]}, {form_post_data["friend_id"]}, '{cur_date}', false)
                                 """
 
         cur.execute(given_present_query)
@@ -269,6 +288,14 @@ def parse_custom_select_form(form_post_data):
         query = f"""
      
                 """
+
+    elif "customselect13" in form_post_data:
+        print(form_post_data)
+        query = f"""
+                SELECT friend_id, friend.name FROM friend_hobby JOIN hobby ON hobby.hobby_id = friend_hobby.hobby_id JOIN friend ON friend_id = id
+                WHERE hobby.name LIKE '{form_post_data["hobby_name"]}';
+                """
+
     else:
         query = ""
 

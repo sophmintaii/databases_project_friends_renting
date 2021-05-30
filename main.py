@@ -43,7 +43,8 @@ def custom_views():
         if request.method == "GET":
             client_data, cols = db_perform_query("select id, name, surname from user_")
             friend_data, cols = db_perform_query("select id, name, surname from friend")
-            return render_template("custom_views.html", client_data=client_data, friend_data=friend_data)
+            hobby_data, cols = db_perform_query("select hobby_id, name from hobby;")
+            return render_template("custom_views.html", client_data=client_data, friend_data=friend_data, hobby_data=hobby_data)
     # except:
     #     error_msg = "something went wrong"
     #     return render_template("error.html", error_msg=error_msg)
