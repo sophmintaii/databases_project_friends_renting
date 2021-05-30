@@ -34,6 +34,11 @@ body{
 	margin: 25px auto;
 	border-radius: 15px;
 	text-align: center;
+	color: #fff;
+}
+
+.options label{
+	margin-right: 50px;
 }
 
 .header p{
@@ -207,7 +212,9 @@ body{
 }
 
 .btn-primary {
+	display: flex;
 	margin-top: 10px;
+	margin-left: 44.8%;
 }
 
 .custom_query_desc {

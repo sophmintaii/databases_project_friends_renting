@@ -32,7 +32,7 @@
     <div class="header">
         <p class="tooltips">Step 1: Select option</p>
     </div>
-    <div>
+    <div class="options">
         <label><input type="radio" name="colorRadio" value="rent_friend"> Rent Friend as Client</label>
         <label><input type="radio" name="colorRadio" value="add_client"> Add Client</label>
         <label><input type="radio" name="colorRadio" value="add_friend"> Add Friend</label>
@@ -59,10 +59,10 @@
                         <option value="{{ client_id }}">{{ name + " " + surname }}</option>
                     {% endfor %}
                 </select>
-                <label>Choose friends you want to rent:</label>
+                <label style="padding-top: 10px">Choose friends you want to rent:</label>
                 <ul>
                 {% for friend_id, desc, name, surname in rent_friends_data %}
-                    <li><label><input type="checkbox" name="rented_friend" value="{{ friend_id }}">{{ name + " " + surname }}  |  {{ desc }}</label></li>
+                    <li style="padding-top: 5px;"><label><input type="checkbox" name="rented_friend" value="{{ friend_id }}">{{ name + " " + surname }}  |  {{ desc }}</label></li>
                 {% endfor %}
                 </ul>
 
@@ -74,128 +74,158 @@
                 </select>
 
             </div>
-            <button name="rent_friend" type="submit" class="btn btn-primary">Send data</button>
+            <button name="rent_friend" type="submit" class="btn btn-primary">Send data</button> 
         </div>
     </form>
 
 
 
     <form class="add_client red box" action="/handle_action" method="POST">
-        <h3 class="custom_query_desc">
-            Enter new client info
-        </h3>
-        <div class="form-group">
-            <label>Phone number</label>
-            <input type="text" class="form-control" name="phone">
-            <label>Name</label>
-            <input type="text" class="form-control" name="name">
-            <label>Surname</label>
-            <input type="text" class="form-control" name="surname">
+        <div class="options">
+            <div class="header">
+                <p class="tooltips">Step 2: Enter details</p>
+            </div>
+            <h3 class="custom_query_desc">
+                Enter new client info
+            </h3>
+            <div class="form-group">
+                <label>Phone number</label>
+                <input type="text" class="form-control" name="phone">
+                <label>Name</label>
+                <input type="text" class="form-control" name="name">
+                <label>Surname</label>
+                <input type="text" class="form-control" name="surname">
+            </div>
+            <button name="add_client" type="submit" class="btn btn-primary">Send data</button>
         </div>
-        <button name="add_client" type="submit" class="btn btn-primary">Send data</button>
     </form>
 
     <form class="add_friend red box" action="/handle_action" method="POST">
-        <h3 class="custom_query_desc">
-            Enter new friend info
-        </h3>
-        <div class="form-group">
+        <div class="options">
+            <div class="header">
+                <p class="tooltips">Step 2: Enter details</p>
+                </div>
+            <h3 class="custom_query_desc">
+                Enter new friend info
+            </h3>
+            <div class="form-group">
 
-            <label>Name</label>
-            <input type="text" class="form-control" name="name">
-            <label>Surname</label>
-            <input type="text" class="form-control" name="surname">
-            <label>Phone number</label>
-            <input type="text" class="form-control" name="phone">
-            <label>Short description</label>
-            <input type="text" class="form-control" name="description">
-            <label>Age</label>
-            <input type="text" class="form-control" name="age">
-            <label>Gender (Enter 'male' or 'female')</label>
-            <input type="text" class="form-control" name="gender">
+                <label>Name</label>
+                <input type="text" class="form-control" name="name">
+                <label>Surname</label>
+                <input type="text" class="form-control" name="surname">
+                <label>Phone number</label>
+                <input type="text" class="form-control" name="phone">
+                <label>Short description</label>
+                <input type="text" class="form-control" name="description">
+                <label>Age</label>
+                <input type="text" class="form-control" name="age">
+                <label>Gender (Enter 'male' or 'female')</label>
+                <input type="text" class="form-control" name="gender">
+            </div>
+            <button name="add_friend" type="submit" class="btn btn-primary">Send data</button>
         </div>
-        <button name="add_friend" type="submit" class="btn btn-primary">Send data</button>
     </form>
 
 
     <form class="gift_something red box" action="/handle_action" method="POST">
-        <h3 class="custom_query_desc">
-            Enter what you want to gift and its price
-        </h3>
-        <div class="form-group">
-            <label>Who is giving a gift</label>
-            <select class="form-control" name="client_id">
-                {% for client_id, name, surname in client_data %}
-                    <option value="{{ client_id }}">{{ name + " " + surname }}</option>
-                {% endfor %}
-            </select>
-            <label>Receiver</label>
-            <select class="form-control" name="friend_id">
-                {% for friend_id, name, surname in friend_data %}
-                    <option value="{{ friend_id }}">{{ name + " " + surname }}</option>
-                {% endfor %}
-            </select>
-            <label>Present ID</label>
-            <input type="text" class="form-control" name="gift_id">
+        <div class="options">
+            <div class="header">
+                <p class="tooltips">Step 2: Enter details</p>
+                </div>
+            <h3 class="custom_query_desc">
+                Enter what you want to gift and its price
+            </h3>
+            <div class="form-group">
+                <label>Who is giving a gift</label>
+                <select class="form-control" name="client_id">
+                    {% for client_id, name, surname in client_data %}
+                        <option value="{{ client_id }}">{{ name + " " + surname }}</option>
+                    {% endfor %}
+                </select>
+                <label>Receiver</label>
+                <select class="form-control" name="friend_id">
+                    {% for friend_id, name, surname in friend_data %}
+                        <option value="{{ friend_id }}">{{ name + " " + surname }}</option>
+                    {% endfor %}
+                </select>
+                <label>Present ID</label>
+                <input type="text" class="form-control" name="gift_id">
+            </div>
+            <button name="gift_something" type="submit" class="btn btn-primary">Send data</button>
         </div>
-        <button name="gift_something" type="submit" class="btn btn-primary">Send data</button>
     </form>
 
     <form class="return_gift red box" action="/handle_action" method="POST">
-        <h3 class="custom_query_desc">
-            Choose what exactly you want to return
-        </h3>
-        <div class="form-group">
-            <label>Which client returns gift to which friend?</label>
-            <select class="form-control" name="given_id">
-                {% for given_id, present_name, from_name, from_surname, to_name, to_surname in unreturned_gifts_data %}
-                    <option value="{{ given_id }}">
-                        Return {{present_name}} given by {{ from_name  + " " + from_surname }} to {{ to_name + " " + to_surname }}
-                    </option>
-                {% endfor %}
-            </select>
+        <div class="options">
+            <div class="header">
+                <p class="tooltips">Step 2: Enter details</p>
+                </div>
+            <h3 class="custom_query_desc">
+                Choose what exactly you want to return
+            </h3>
+            <div class="form-group">
+                <label>Which client returns gift to which friend?</label>
+                <select class="form-control" name="given_id">
+                    {% for given_id, present_name, from_name, from_surname, to_name, to_surname in unreturned_gifts_data %}
+                        <option value="{{ given_id }}">
+                            Return {{present_name}} given by {{ from_name  + " " + from_surname }} to {{ to_name + " " + to_surname }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button name="return_gift" type="submit" class="btn btn-primary">Send data</button>
         </div>
-        <button name="return_gift" type="submit" class="btn btn-primary">Send data</button>
     </form>
 
 
     <form class="file_complaint red box" action="/handle_action" method="POST">
-        <h3 class="custom_query_desc">
-            Enter complaint details
-        </h3>
-        <div class="form-group">
-            <label>Who is complaining?</label>
-            {% for client_id, name, surname in client_data %}
-                <label><input type="checkbox" name="complaining_client" value="{{ client_id }}">{{ name + " " + surname }}</label>
-            {% endfor %}
-
-            <label>Adressant</label>
-            <select class="form-control" name="friend_id">
-                {% for friend_id, name, surname in friend_data %}
-                    <option value="{{ friend_id }}">{{ name + " " + surname }}</option>
+        <div class="options">
+            <div class="header">
+                <p class="tooltips">Step 2: Enter details</p>
+                </div>
+            <h3 class="custom_query_desc">
+                Enter complaint details
+            </h3>
+            <div class="form-group">
+                <label>Who is complaining?</label>
+                {% for client_id, name, surname in client_data %}
+                    <label><input type="checkbox" name="complaining_client" value="{{ client_id }}">{{ name + " " + surname }}</label>
                 {% endfor %}
-            </select>
 
-            <label>What happened?</label>
-            <input type="text" class="form-control" name="complaint_descr">
+                <label>Adressant</label>
+                <select class="form-control" name="friend_id">
+                    {% for friend_id, name, surname in friend_data %}
+                        <option value="{{ friend_id }}">{{ name + " " + surname }}</option>
+                    {% endfor %}
+                </select>
+
+                <label>What happened?</label>
+                <input type="text" class="form-control" name="complaint_descr">
+            </div>
+            <button name="file_complaint" type="submit" class="btn btn-primary">Send data</button>
         </div>
-        <button name="file_complaint" type="submit" class="btn btn-primary">Send data</button>
     </form>
 
 
     <form class="take_holiday red box" action="/handle_action" method="POST">
-        <h3 class="custom_query_desc">
-            Enter holiday info
-        </h3>
-        <div class="form-group">
-            <label>Who is going on vacation</label>
-            <select class="form-control" name="friend_id">
-                {% for friend_id, name, surname in friend_data %}
-                    <option value="{{ friend_id }}">{{ name + " " + surname }}</option>
-                {% endfor %}
-            </select>
+        <div class="options">
+            <div class="header">
+                <p class="tooltips">Step 2: Enter details</p>
+            </div>
+            <h3 class="custom_query_desc">
+                Enter holiday info
+            </h3>
+            <div class="form-group">
+                <label>Who is going on vacation</label>
+                <select class="form-control" name="friend_id">
+                    {% for friend_id, name, surname in friend_data %}
+                        <option value="{{ friend_id }}">{{ name + " " + surname }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button name="take_holiday" type="submit" class="btn btn-primary">Send data</button>
         </div>
-        <button name="take_holiday" type="submit" class="btn btn-primary">Send data</button>
     </form>
 </body>
 </html>
