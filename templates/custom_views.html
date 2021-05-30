@@ -7,7 +7,8 @@
 	<script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
     <style>
         .box{
             color: #fff;
@@ -15,14 +16,11 @@
             display: none;
             margin-top: 20px;
         }
-        .red{ background: #ff0000; }
-        .green{ background: #228B22; }
-        .blue{ background: #0000ff; }
     </style>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script>
         $(document).ready(function(){
-            $('input[type="radio"]').click(function(){
+            $('option[class="select-option"]').click(function(){
                 var inputValue = $(this).attr("value");
                 var targetBox = $("." + inputValue);
                 $(".box").not(targetBox).hide();
@@ -32,211 +30,294 @@
     </script>
 </head>
 <body>
-    <div>
-        <label><input type="radio" name="colorRadio" value="query1"> red</label>
-        <label><input type="radio" name="colorRadio" value="query2"> green</label>
-        <label><input type="radio" name="colorRadio" value="query3"> blue</label>
-        <label><input type="radio" name="colorRadio" value="query4"> red</label>
-        <label><input type="radio" name="colorRadio" value="query5"> green</label>
-        <label><input type="radio" name="colorRadio" value="query6"> blue</label>
-        <label><input type="radio" name="colorRadio" value="query7"> red</label>
-        <label><input type="radio" name="colorRadio" value="query8"> green</label>
-        <label><input type="radio" name="colorRadio" value="query9"> blue</label>
-        <label><input type="radio" name="colorRadio" value="query10"> red</label>
-        <label><input type="radio" name="colorRadio" value="query11"> green</label>
-        <label><input type="radio" name="colorRadio" value="query12"> blue</label>
+    <div class="header">
+        <p class="tooltips">Step 1: Select option</p>
     </div>
+    <select href="custom.css" class="form-select select-action" aria-label="Default select example" style="margin-left: 25%; margin-right: 10%; width: 50%; margin-top: 15px;">
+        <option class="select-option" disabled="" selected=""> -- select an option -- </option>
+        <option class="select-option" value="query1">1</option>
+        <option class="select-option" value="query2">2</option>
+        <option class="select-option" value="query3">3</option>
+        <option class="select-option" value="query4">4</option>
+        <option class="select-option" value="query5">5</option>
+        <option class="select-option" value="query6">6</option>
+        <option class="select-option" value="query7">7</option>
+        <option class="select-option" value="query8">8</option>
+        <option class="select-option" value="query9">9</option>
+        <option class="select-option" value="query10">10</option>
+        <option class="select-option" value="query11">11</option>
+        <option class="select-option" value="query12">12</option>
+    </select>
     <form class="query1 red box" action="/custom_query_result" method="POST">
-        <h3 class="custom_query_desc">
-            Для клієнта С знайти усіх друзів, яких він наймав принаймні N разів за вказаний період (з дати F по дату T)
-        </h3>
-        <div class="form-group">
-            <label>Client</label>
-            <select class="form-control" name="client_id">
-                {% for client_id, name, surname in client_data %}
-                    <option value="{{ client_id }}">{{ name + " " + surname }}</option>
-                {% endfor %}
-            </select>
-            <label>N</label>
-            <input type="text" class="form-control" name="N">
-            <label>Start date</label>
-            <input type="text" class="form-control" name="start_date">
-            <label>End date</label>
-            <input type="text" class="form-control" name="end_date">
+        <div class="options">
+            <div class="header">
+                <p class="tooltips">Step 2: Enter details</p>
+            </div>
+            <h3 class="custom_query_desc">
+                Для клієнта С знайти усіх друзів, яких він наймав принаймні N разів за вказаний період
+                (з дати F по дату T)
+            </h3>
+            <div class="form-group">
+                <label>Client</label>
+                <select class="form-control" name="client_id">
+                    {% for client_id, name, surname in client_data %}
+                        <option value="{{ client_id }}">{{ name + " " + surname }}</option>
+                    {% endfor %}
+                </select>
+                <label>N</label>
+                <input type="text" class="form-control" name="N">
+                <label>Start date</label>
+                <input type="text" class="form-control" name="start_date">
+                <label>End date</label>
+                <input type="text" class="form-control" name="end_date">
+            </div>
+            <button name="customselect1" type="submit" class="btn btn-primary">Send data</button>
         </div>
-        <button name="customselect1" type="submit" class="btn btn-primary">Send data</button>
     </form>
     <form class="query2 green box" action="/custom_query_result" method="POST">
-        <h3 class="custom_query_desc">
-            Для найманого друга X знайти усіх клієнтів, які наймали його принаймні N разів за вказаний період (з дати F по дату T)ля клієнта С знайти усіх друзів, яких він наймав принаймні N разів за вказаний період (з дати F по дату T)
-        </h3>
-        <div class="form-group">
-            <label>Friend</label>
-            <select class="form-control" name="friend_id">
-                {% for friend_id, name, surname in friend_data %}
-                    <option value="{{ friend_id }}">{{ name + " " + surname }}</option>
-                {% endfor %}
-            </select>
-            <label>N</label>
-            <input type="text" class="form-control" name="N">
-            <label>Start date</label>
-            <input type="text" class="form-control" name="start_date">
-            <label>End date</label>
-            <input type="text" class="form-control" name="end_date">
+        <div class="options">
+            <div class="header">
+                <p class="tooltips">Step 2: Enter details</p>
+            </div>
+            <h3 class="custom_query_desc">
+                Для найманого друга X знайти усіх клієнтів, які наймали його принаймні N разів за вказаний період
+                (з дати F по дату T)
+                Для клієнта С знайти усіх друзів, яких він наймав принаймні N разів за вказаний період
+                (з дати F по дату T)
+            </h3>
+            <div class="form-group">
+                <label>Friend</label>
+                <select class="form-control" name="friend_id">
+                    {% for friend_id, name, surname in friend_data %}
+                        <option value="{{ friend_id }}">{{ name + " " + surname }}</option>
+                    {% endfor %}
+                </select>
+                <label>N</label>
+                <input type="text" class="form-control" name="N">
+                <label>Start date</label>
+                <input type="text" class="form-control" name="start_date">
+                <label>End date</label>
+                <input type="text" class="form-control" name="end_date">
+            </div>
+            <button name="customselect2" type="submit" class="btn btn-primary">Send data</button>
         </div>
-        <button name="customselect2" type="submit" class="btn btn-primary">Send data</button>
     </form>
     <form class="query3 blue box" action="/custom_query_result" method="POST">
-        <h3 class="custom_query_desc">
-            Для найманого друга X знайти усі свята, на які його наймали принаймні N разів за вказаний період (з дати F по дату T)
-        </h3>
-        <div class="form-group">
-            <label>Friend</label>
-            <select class="form-control" name="friend_id">
-                {% for friend_id, name, surname in friend_data %}
-                    <option value="{{ friend_id }}">{{ name + " " + surname }}</option>
-                {% endfor %}
-            </select>
-            <label>N</label>
-            <input type="text" class="form-control" name="N">
-            <label>Start date</label>
-            <input type="text" class="form-control" name="start_date">
-            <label>End date</label>
-            <input type="text" class="form-control" name="end_date">
+        <div class="options">
+            <div class="header">
+                <p class="tooltips">Step 2: Enter details</p>
+            </div>
+            <h3 class="custom_query_desc">
+                Для найманого друга X знайти усі свята, на які його наймали принаймні N разів за вказаний період
+                (з дати F по дату T)
+            </h3>
+            <div class="form-group">
+                <label>Friend</label>
+                <select class="form-control" name="friend_id">
+                    {% for friend_id, name, surname in friend_data %}
+                        <option value="{{ friend_id }}">{{ name + " " + surname }}</option>
+                    {% endfor %}
+                </select>
+                <label>N</label>
+                <input type="text" class="form-control" name="N">
+                <label>Start date</label>
+                <input type="text" class="form-control" name="start_date">
+                <label>End date</label>
+                <input type="text" class="form-control" name="end_date">
+            </div>
+            <button name="customselect3" type="submit" class="btn btn-primary">Send data</button>
         </div>
-        <button name="customselect3" type="submit" class="btn btn-primary">Send data</button>
     </form>
     <form class="query4 red box" action="/custom_query_result" method="POST">
-        <h3 class="custom_query_desc">
-            Знайти усiх клiєнтiв, якi наймали щонайменше N рiзних друзiв за вказаний перiод (з дати F по дату T);
-        </h3>
-        <div class="form-group">
-            <label>N</label>
-            <input type="text" class="form-control" name="N">
-            <label>Start date</label>
-            <input type="text" class="form-control" name="start_date">
-            <label>End date</label>
-            <input type="text" class="form-control" name="end_date">
+        <div class="options">
+            <div class="header">
+                <p class="tooltips">Step 2: Enter details</p>
+            </div>
+            <h3 class="custom_query_desc">
+                Знайти усiх клiєнтiв, якi наймали щонайменше N рiзних друзiв за вказаний перiод
+                (з дати F по дату T)
+            </h3>
+            <div class="form-group">
+                <label>N</label>
+                <input type="text" class="form-control" name="N">
+                <label>Start date</label>
+                <input type="text" class="form-control" name="start_date">
+                <label>End date</label>
+                <input type="text" class="form-control" name="end_date">
+            </div>
+            <button name="customselect4" type="submit" class="btn btn-primary">Send data</button>
         </div>
-        <button name="customselect4" type="submit" class="btn btn-primary">Send data</button>
     </form>
     <form class="query5 red box" action="/custom_query_result" method="POST">
-        <h3 class="custom_query_desc">
-            Знайти усiх найманих друзiв, яких наймали хоча б N разiв за вказаний перiод (з дати F по дату T)
-        </h3>
-        <div class="form-group">
-            <label>N</label>
-            <input type="text" class="form-control" name="N">
-            <label>Start date</label>
-            <input type="text" class="form-control" name="start_date">
-            <label>End date</label>
-            <input type="text" class="form-control" name="end_date">
+        <div class="options">
+            <div class="header">
+                <p class="tooltips">Step 2: Enter details</p>
+            </div>
+            <h3 class="custom_query_desc">
+                Знайти усiх найманих друзiв, яких наймали хоча б N разiв за вказаний перiод
+                (з дати F по дату T)
+            </h3>
+            <div class="form-group">
+                <label>N</label>
+                <input type="text" class="form-control" name="N">
+                <label>Start date</label>
+                <input type="text" class="form-control" name="start_date">
+                <label>End date</label>
+                <input type="text" class="form-control" name="end_date">
+            </div>
+            <button name="customselect5" type="submit" class="btn btn-primary">Send data</button>
         </div>
-        <button name="customselect5" type="submit" class="btn btn-primary">Send data</button>
     </form>
     <form class="query6 red box" action="/custom_query_result" method="POST">
-        <h3 class="custom_query_desc">
-            Знайти сумарну кiлькiсть побачень по мiсяцях
-        </h3>
-        <button name="customselect6" type="submit" class="btn btn-primary">Send data</button>
+        <div class="options">
+            <div class="header">
+                <p class="tooltips">Step 2: Enter details</p>
+            </div>
+            <h3 class="custom_query_desc">
+                Знайти сумарну кiлькiсть побачень по мiсяцях
+            </h3>
+            <button name="customselect6" type="submit" class="btn btn-primary">Send data</button>
+        </div>
     </form>
     <form class="query7 blue box" action="/custom_query_result" method="POST">
-        <h3 class="custom_query_desc">
-            Для найманого друга Х та кожного свята, на якому вiн побував,
-            знайти скiльки разiв за вказаний перiод (з дати F по дату T) вiн був найнятий
-            на свято у групi з принаймнi N друзiв
-        </h3>
-        <div class="form-group">
-            <label>Friend</label>
-            <select class="form-control" name="friend_id">
-                {% for friend_id, name, surname in friend_data %}
-                    <option value="{{ friend_id }}">{{ name + " " + surname }}</option>
-                {% endfor %}
-            </select>
-            <label>N</label>
-            <input type="text" class="form-control" name="N">
-            <label>Start date</label>
-            <input type="text" class="form-control" name="start_date">
-            <label>End date</label>
-            <input type="text" class="form-control" name="end_date">
+        <div class="options">
+            <div class="header">
+                <p class="tooltips">Step 2: Enter details</p>
+            </div>
+            <h3 class="custom_query_desc">
+                Для найманого друга Х та кожного свята, на якому вiн побував,
+                знайти скiльки разiв за вказаний перiод (з дати F по дату T) вiн був найнятий
+                на свято у групi з принаймнi N друзiв
+            </h3>
+            <div class="form-group">
+                <label>Friend</label>
+                <select class="form-control" name="friend_id">
+                    {% for friend_id, name, surname in friend_data %}
+                        <option value="{{ friend_id }}">{{ name + " " + surname }}</option>
+                    {% endfor %}
+                </select>
+                <label>N</label>
+                <input type="text" class="form-control" name="N">
+                <label>Start date</label>
+                <input type="text" class="form-control" name="start_date">
+                <label>End date</label>
+                <input type="text" class="form-control" name="end_date">
+            </div>
+            <button name="customselect7" type="submit" class="btn btn-primary">Send data</button>
         </div>
-        <button name="customselect7" type="submit" class="btn btn-primary">Send data</button>
     </form>
     <form class="query8 red box" action="/custom_query_result" method="POST">
-        <h3 class="custom_query_desc">
-            Вивести подарунки у порядку спадання середньої кiлькостi вихiдних,
-            що брали найманi друзi, якi отримували подарунок вiд клiєнта С протягом
-            вказаного перiоду (з дати F по дату T)
-        </h3>
-        <div class="form-group">
-            <label>Client</label>
-            <select class="form-control" name="client_id">
-                {% for client_id, name, surname in client_data %}
-                    <option value="{{ client_id }}">{{ name + " " + surname }}</option>
-                {% endfor %}
-            </select>
-            <label>Start date</label>
-            <input type="text" class="form-control" name="start_date">
-            <label>End date</label>
-            <input type="text" class="form-control" name="end_date">
+        <div class="options">
+            <div class="header">
+                <p class="tooltips">Step 2: Enter details</p>
+            </div>
+            <h3 class="custom_query_desc">
+                Вивести подарунки у порядку спадання середньої кiлькостi вихiдних,
+                що брали найманi друзi, якi отримували подарунок вiд клiєнта С протягом
+                вказаного перiоду (з дати F по дату T)
+            </h3>
+            <div class="form-group">
+                <label>Client</label>
+                <select class="form-control" name="client_id">
+                    {% for client_id, name, surname in client_data %}
+                        <option value="{{ client_id }}">{{ name + " " + surname }}</option>
+                    {% endfor %}
+                </select>
+                <label>Start date</label>
+                <input type="text" class="form-control" name="start_date">
+                <label>End date</label>
+                <input type="text" class="form-control" name="end_date">
+            </div>
+            <button name="customselect8" type="submit" class="btn btn-primary">Send data</button>
         </div>
-        <button name="customselect8" type="submit" class="btn btn-primary">Send data</button>
     </form>
 
     <form class="query9 red box" action="/custom_query_result" method="POST">
-        <h3 class="custom_query_desc">
-            ?
-        </h3>
-        <button name="customselect9" type="submit" class="btn btn-primary">Send data</button>
+        <div class="options">
+            <div class="header">
+                <p class="tooltips">Step 2: Enter details</p>
+            </div>
+            <h3 class="custom_query_desc">
+                Вивести найманих друзiв у порядку спадання кiлькость скарг вiд груп 
+                -- з принаймнi N клiєнтiв за вказаний перiод (з дати F по дату T);
+            </h3>
+            <div class="form-group">
+                <label>Start date</label>
+                <input type="text" class="form-control" name="start_date">
+                <label>End date</label>
+                <input type="text" class="form-control" name="end_date">
+                <button name="customselect9" type="submit" class="btn btn-primary">Send data</button>
+            </div>
+        </div>
     </form>
 
     <form class="query10 red box" action="/custom_query_result" method="POST">
-        <h3 class="custom_query_desc">
-            Знайти усi спiльнi подiї для клiєнта С та найманого друга Х за вказаний перiод (з дати F по дату T)
-        </h3>
-        <div class="form-group">
-            <label>Client</label>
-            <select class="form-control" name="client_id">
-                {% for client_id, name, surname in client_data %}
-                    <option value="{{ client_id }}">{{ name + " " + surname }}</option>
-                {% endfor %}
-            </select>
-            <label>Friend</label>
-            <select class="form-control" name="friend_id">
-                {% for friend_id, name, surname in friend_data %}
-                    <option value="{{ friend_id }}">{{ name + " " + surname }}</option>
-                {% endfor %}
-            </select>
-            <label>Start date</label>
-            <input type="text" class="form-control" name="start_date">
-            <label>End date</label>
-            <input type="text" class="form-control" name="end_date">
+        <div class="options">
+            <div class="header">
+                <p class="tooltips">Step 2: Enter details</p>
+            </div>
+            <h3 class="custom_query_desc">
+                Знайти усi спiльнi подiї для клiєнта С та найманого друга Х за вказаний перiод
+                (з дати F по дату T)
+            </h3>
+            <div class="form-group">
+                <label>Client</label>
+                <select class="form-control" name="client_id">
+                    {% for client_id, name, surname in client_data %}
+                        <option value="{{ client_id }}">{{ name + " " + surname }}</option>
+                    {% endfor %}
+                </select>
+                <label>Friend</label>
+                <select class="form-control" name="friend_id">
+                    {% for friend_id, name, surname in friend_data %}
+                        <option value="{{ friend_id }}">{{ name + " " + surname }}</option>
+                    {% endfor %}
+                </select>
+                <label>Start date</label>
+                <input type="text" class="form-control" name="start_date">
+                <label>End date</label>
+                <input type="text" class="form-control" name="end_date">
+            </div>
+            <button name="customselect10" type="submit" class="btn btn-primary">Send data</button>
         </div>
-        <button name="customselect10" type="submit" class="btn btn-primary">Send data</button>
     </form>
 
     <form class="query11 red box" action="/custom_query_result" method="POST">
-        <h3 class="custom_query_desc">
-            Знайти усi днi коли вихiдними були вiд А до В найманих друзiв, включно;
-        </h3>
-        <div class="form-group">
-            <label>A</label>
-            <input type="text" class="form-control" name="A">
-            <label>B</label>
-            <input type="text" class="form-control" name="B">
+        <div class="options">
+            <div class="header">
+                <p class="tooltips">Step 2: Enter details</p>
+            </div>
+            <h3 class="custom_query_desc">
+                Знайти усi днi коли вихiдними були вiд А до В найманих друзiв, включно
+            </h3>
+            <div class="form-group">
+                <label>A</label>
+                <input type="text" class="form-control" name="A">
+                <label>B</label>
+                <input type="text" class="form-control" name="B">
+            </div>
+            <button name="customselect11" type="submit" class="btn btn-primary">Send data</button>
         </div>
-        <button name="customselect11" type="submit" class="btn btn-primary">Send data</button>
     </form>
 
     <form class="query12 red box" action="/custom_query_result" method="POST">
-        <h3 class="custom_query_desc">
-            По мiсяцях знайти середню кiлькiсть клiєнтiв у групi, що реєстрували скаргу на найманого друга Х
-        </h3>
-        <button name="customselect12" type="submit" class="btn btn-primary">Send data</button>
+        <div class="options">
+            <div class="header">
+                <p class="tooltips">Step 2: Enter details</p>
+            </div>
+            <h3 class="custom_query_desc">
+                По мiсяцях знайти середню кiлькiсть клiєнтiв у групi, що реєстрували скаргу на найманого друга Х
+            </h3>
+            <div class="form-group">
+                <label>Friend</label>
+                <select class="form-control" name="friend_id">
+                    {% for friend_id, name, surname in friend_data %}
+                        <option value="{{ friend_id }}">{{ name + " " + surname }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button name="customselect12" type="submit" class="btn btn-primary">Send data</button>
+        </div>
     </form>
-
-{#    <div class="red box">You have selected <strong>red radio button</strong> so i am here</div>#}
-{#    <div class="green box">You have selected <strong>green radio button</strong> so i am here</div>#}
-{#    <div class="blue box">You have selected <strong>blue radio button</strong> so i am here</div>#}
 </body>
 </html>
