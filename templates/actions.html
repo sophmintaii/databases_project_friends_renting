@@ -19,7 +19,7 @@
     </style>
     <script>
         $(document).ready(function(){
-            $('option[type="radio"]').click(function(){
+            $('input[type="radio"]').click(function(){
                 var inputValue = $(this).attr("value");
                 var targetBox = $("." + inputValue);
                 $(".box").not(targetBox).hide();
@@ -32,16 +32,16 @@
     <div class="header">
         <p class="tooltips">Step 1: Select option</p>
     </div>
-    <select href="custom.css" class="form-select select-action" aria-label="Default select example" style="margin-left: 25%; margin-right: 10%; width: 50%;">
-        <option type="radio" class="select-option" disabled="" selected=""> -- select an option -- </option>
-        <option type="radio" class="select-option" value="rent_friend">Rent Friend as Client</option>
-        <option type="radio" class="select-option" value="add_client">Add Client</option>
-        <option type="radio" class="select-option" value="add_friend">Add Friend</option>
-        <option type="radio" class="select-option" value="gift_something">Gift something</option>
-        <option type="radio" class="select-option" value="return_gift">Return Gift To a Friend as Client</option>
-        <option type="radio" class="select-option" value="file_complaint">File a complaint</option>
-        <option type="radio" class="select-option" value="take_holiday">Take holiday</option>
-    </select>
+    <div>
+        <label><input type="radio" name="colorRadio" value="rent_friend"> Rent Friend as Client</label>
+        <label><input type="radio" name="colorRadio" value="add_client"> Add Client</label>
+        <label><input type="radio" name="colorRadio" value="add_friend"> Add Friend</label>
+        <label><input type="radio" name="colorRadio" value="gift_something"> Gift something</label>
+        <label><input type="radio" name="colorRadio" value="return_gift"> Return Gift To a Friend as Client</label>
+        <label><input type="radio" name="colorRadio" value="file_complaint"> File a complaint</label>
+        <label><input type="radio" name="colorRadio" value="take_holiday"> Take holiday</label>
+    </div>
+    
 
     <form class="rent_friend red box" action="/handle_action" method="POST">
         <div class="options">
@@ -49,8 +49,9 @@
                 <p class="tooltips">Step 2: Enter details</p>
             </div>
             <h3 class="custom_query_desc">
-                Enter friend rent details
-            </h3>
+                        Enter friend rent details
+                    </h3>
+        
             <div class="form-group">
                 <label>Who is renting?</label>
                 <select class="form-control" name="client_id">
@@ -58,10 +59,10 @@
                         <option value="{{ client_id }}">{{ name + " " + surname }}</option>
                     {% endfor %}
                 </select>
-                <label style="padding-top: 10px" >Choose friends you want to rent:</label>
-                <ul style=" list-style-type: none;">
+                <label>Choose friends you want to rent:</label>
+                <ul>
                 {% for friend_id, desc, name, surname in rent_friends_data %}
-                    <li style="padding-top: 5px;"><label><input type="checkbox" name="rented_friend" value="{{ friend_id }}">{{" " + name + " " + surname }}  |  {{ desc }}</label></li>
+                    <li><label><input type="checkbox" name="rented_friend" value="{{ friend_id }}">{{ name + " " + surname }}  |  {{ desc }}</label></li>
                 {% endfor %}
                 </ul>
 
