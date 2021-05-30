@@ -243,6 +243,8 @@
                 -- з принаймнi N клiєнтiв за вказаний перiод (з дати F по дату T);
             </h3>
             <div class="form-group">
+                <label>N</label>
+                <input type="text" class="form-control" name="N">
                 <label>Start date</label>
                 <input type="text" class="form-control" name="start_date">
                 <label>End date</label>
@@ -308,6 +310,12 @@
             <h3 class="custom_query_desc">
                 По мiсяцях знайти середню кiлькiсть клiєнтiв у групi, що реєстрували скаргу на найманого друга Х
             </h3>
+            <label>Friend</label>
+            <select class="form-control" name="friend_id">
+                {% for friend_id, name, surname in friend_data %}
+                    <option value="{{ friend_id }}">{{ name + " " + surname }}</option>
+                {% endfor %}
+            </select>
             <button name="customselect12" type="submit" class="btn btn-primary">Send data</button>
         </div>
     </form>

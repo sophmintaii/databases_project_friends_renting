@@ -156,7 +156,7 @@ def perform_db_action(form_post_data):
 
         # Modify complaint table
         query = f"""INSERT INTO complaint(complaint_id, text, friend_id, date) VALUES
-                    ({max_id}, {form_post_data["complaint_descr"]}, {form_post_data["friend_id"]}, '{cur_date}')
+                    ({max_id}, '{form_post_data["complaint_descr"]}', {form_post_data["friend_id"]}, '{cur_date}')
                     """
 
         cur.execute(query)
@@ -267,7 +267,16 @@ def parse_custom_select_form(form_post_data):
 
     elif 'customselect9' in form_post_data:
         query = f"""
-                
+                SELECT friend_id FROM complaint 
+                JOIN (
+                    SELECT complaint_id FROM user_complaint
+                    GROUP BY complaint_id
+                    HAVING COUNT(complaint_id) > {form_post_data["N"]}
+                ) AS special_complaints
+                USING (complaint_id)
+                WHERE complaint.date BETWEEN date('{form_post_data["start_date"]}') AND date('{form_post_data["end_date"]}')
+                GROUP BY friend_id
+                ORDER BY COUNT(complaint_id) DESC;
                 """
 
     elif 'customselect10' in form_post_data:
@@ -286,7 +295,14 @@ def parse_custom_select_form(form_post_data):
 
     elif 'customselect12' in form_post_data:
         query = f"""
-     
+                         SELECT EXTRACT(MONTH FROM date) AS month, AVG(group_size) AS average FROM complaint 
+                    JOIN (
+                        SELECT complaint_id, COUNT(complaint_id) AS group_size FROM user_complaint
+                        GROUP BY complaint_id
+                    ) AS special_complaints
+                    USING (complaint_id)
+                    WHERE friend_id = {form_post_data["friend_id"]}
+                    GROUP BY EXTRACT(MONTH FROM date);
                 """
 
     elif "customselect13" in form_post_data:
